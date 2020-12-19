@@ -1,111 +1,65 @@
-<html>
-    <head>
-        <title>Crop Pattern in India</title>
-        <script src="https://d3js.org/d3.v6.min.js"></script>
-        <style>
-            .header {
-                padding: 20px;
-                text-align: center;
-                background: gray;
-                border-radius: 25px;
-                color: black;
-                font-family: "Times New Roman", Times, serif;
-                font-size: 20px;
-            }
-            .visualization {
-                margin: auto;
-                width: 50%;
-                padding: 10px;
-                font-family: "Times New Roman", Times, serif;
-                display: flex;
-            }
-            .dropdown{
-                margin: 10px;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="header">
-            <h1>Crop Pattern in India</h1>
-        </div>
-        
-        <div class="visualization" >
-            <div>
-                <svg id="drawspace" margin=10px height="600" width="600" style="border:1px solid black"></svg>
-            </div>
-            <div style="margin-left: 30px">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crop Pattern in India</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Crop Pattern in India</h1>
+    </div>
 
-                <div class="dropdown">
-                    <label for="year">Select Year:</label>
-                    <select id="year" name="year">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="fiat">Fiat</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                </div>
-                
-                <div class="dropdown">
-                    <label for="season">Select Season:</label>
-                    <select id="season" name="season">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="fiat">Fiat</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                </div>
-                
-                <div class="dropdown">
-                    <label for="crop">Select Crop:</label>
-                    <select id="crop" name="crop">
-                        <option value="volvo">Volvo</option>
-                        <option value="saab">Saab</option>
-                        <option value="fiat">Fiat</option>
-                        <option value="audi">Audi</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        
-        <div class="problem_statement">
-            <h2>Problem Statement</h2>
-            <p>jkdnflsakdnfdslfndsgnvodsafkndfvbnoidp</p>
+    <div class="visualization">
+      <div>
+        <svg
+          id="drawspace"
+          margin="10px"
+          height="600"
+          width="600"
+          style="border: 1px solid black"
+        ></svg>
+      </div>
+      <div style="margin-left: 30px">
+        <div class="dropdown">
+          <label for="year">Select Year:</label>
+          <select id="year" name="year">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="fiat">Fiat</option>
+            <option value="audi">Audi</option>
+          </select>
         </div>
 
-    <script>
+        <div class="dropdown">
+          <label for="season">Select Season:</label>
+          <select id="season" name="season">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="fiat">Fiat</option>
+            <option value="audi">Audi</option>
+          </select>
+        </div>
 
-        Promise.all([d3.json("states_india.geojson"),
-                     d3.csv("crop.csv")])
-                .then(showData)
+        <div class="dropdown">
+          <label for="crop">Select Crop:</label>
+          <select id="crop" name="crop">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="fiat">Fiat</option>
+            <option value="audi">Audi</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-
-        function showData(statesData){
-            
-            let height = 600;
-            let width = 600;
-
-            let drawspace = d3.select("#drawspace")
-                
-            let projection = d3.geoMercator()
-                                .scale(950)
-                                .translate([-1050,680])
-
-            let Indiapath = d3.geoPath()
-                     .projection(projection)
-
-            console.log(statesData)
-
-            drawspace.selectAll("path")
-                     .data(statesData.features)
-                     .enter()
-                     .append("path")
-                     .attr("d", d => Indiapath(d))
-                     .attr("stroke","black")
-
-        }
-
-    </script>
-    </body>
-    
-
+    <div class="problem_statement">
+      <h2>Problem Statement</h2>
+      <p>jkdnflsakdnfdslfndsgnvodsafkndfvbnoidp</p>
+    </div>
+    <script src="legend.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
