@@ -9,7 +9,6 @@ function showData(datasources) {
 
   let populationInfo = datasources[0];
   let mapInfo = datasources[1];
-  console.log(populationInfo);
 
   let dataIndex = {};
   for (let c of populationInfo) {
@@ -36,14 +35,18 @@ function showData(datasources) {
     .scaleLinear()
     .domain([0, maxPopulation])
     .range(["white", "red"]);
+    
+  let color = d3.scaleQuantize([0, maxPopulation], d3.schemeReds[6]);
+  drawSpace.append("g")
+        .attr("transform", "translate("+drawSpaceW/2+",0)")
+        .append(() => legend({color, title: "Efficiency", width: 260}));
 
   let myProjection = d3
     .geoMercator()
-    .scale(900)
-    .translate([-1000, 650]);
+    .scale(950)
+    .translate([-1050, 680]);
   let geoPath = d3.geoPath().projection(myProjection);
 
-  console.log(mapInfo.features);
   drawSpace
     .selectAll("path")
     .data(mapInfo.features)
@@ -54,7 +57,16 @@ function showData(datasources) {
     // .attr("fill", (d) => cScale(d.properties.population)); // black for missing by default
     .attr("fill", (d) =>
       d.properties.population ? cScale(d.properties.population) : "blue"
-    );
+    ).on("mouseenter", function () {
+      this.style.opacity = 0.8;
+      //   d3.select(this).attr("fill", "blue"); // try this
+    }).on("mouseout", function () {
+      this.style.opacity = 1;
+      //   d3.select(this).attr("fill", "blue"); // try this
+    })
+    .append("title")
+      .text(d => `${d.properties.st_nm}: ${d.properties.population} `);
+    
   //   .attr("fill", (d) =>
   //     d.properties.population ? cMScale(d.properties.population) : "blue"
   //   ); // for divergent scale
