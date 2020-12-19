@@ -71,5 +71,41 @@
             <h2>Problem Statement</h2>
             <p>jkdnflsakdnfdslfndsgnvodsafkndfvbnoidp</p>
         </div>
+
+    <script>
+
+        Promise.all([d3.json("states_india.geojson"),
+                     d3.csv("crop.csv")])
+                .then(showData)
+
+
+        function showData(statesData){
+            
+            let height = 600;
+            let width = 600;
+
+            let drawspace = d3.select("#drawspace")
+                
+            let projection = d3.geoMercator()
+                                .scale(950)
+                                .translate([-1050,680])
+
+            let Indiapath = d3.geoPath()
+                     .projection(projection)
+
+            console.log(statesData)
+
+            drawspace.selectAll("path")
+                     .data(statesData.features)
+                     .enter()
+                     .append("path")
+                     .attr("d", d => Indiapath(d))
+                     .attr("stroke","black")
+
+        }
+
+    </script>
     </body>
+    
+
 </html>
