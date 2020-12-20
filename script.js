@@ -1,5 +1,9 @@
+let year = document.getElementById("year").value;
+let season = document.getElementById("season").value;
+let crop = document.getElementById("crop").value;
+
 let drawSpace = d3.select("#drawspace");
-Promise.all([d3.csv("crop.csv"), d3.json("states.json")]).then(
+Promise.all([d3.csv("tempdata.csv"), d3.json("states.json")]).then(
   showData
 );
 
