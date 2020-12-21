@@ -1,7 +1,7 @@
 .header {
   padding: 10px;
   text-align: center;
-  background: lightyellow;
+  background: rgb(199, 233, 192);
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
   color: black;
   font-family: "Trebuchet MS";
@@ -34,7 +34,7 @@ body {
 }
 
 .footer {
-  background-color: lightgoldenrodyellow;
+  background-color: rgb(237, 248, 233);
   padding: 15px 0 10px;
   font-size: 15px;
   box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.5);
