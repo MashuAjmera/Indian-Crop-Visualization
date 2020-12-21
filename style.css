@@ -4,59 +4,55 @@
   background: lightyellow;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
   color: black;
-  font-family: 'Trebuchet MS';
+  font-family: "Trebuchet MS";
   font-size: 20px;
 }
 .visualization {
   margin: auto;
   width: 50%;
   padding: 10px;
-  font-family: 'Trebuchet MS';
+  font-family: "Trebuchet MS";
   display: flex;
+  justify-content: center;
 }
-#drawspace{
+#drawspace {
   margin: "10px";
-  background-color : white;
+  background-color: white;
 }
-label{
+label {
   color: black;
-  padding: 5px;;
+  padding: 5px;
 }
 body {
   margin: 0;
   padding: 0;
   background-color: white;
 }
-.problem_statement{
+.problem_statement {
   margin: 10px;
-  font-family: 'Trebuchet MS';
+  font-family: "Trebuchet MS";
 }
-#problemstatement{
-  
-}
-.footer
-{
-  background-color:lightgoldenrodyellow;
-  padding:15px 0 10px;
-  font-size:15px;
+
+.footer {
+  background-color: lightgoldenrodyellow;
+  padding: 15px 0 10px;
+  font-size: 15px;
   box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.5);
-  font-family: 'Trebuchet MS';
-  line-height:25px;
-  color:#737373;
+  font-family: "Trebuchet MS";
+  line-height: 25px;
+  color: #737373;
   display: flex;
   justify-content: space-evenly;
 }
-.details
-{
-  padding-left:0;
-  list-style:none
+.details {
+  padding-left: 0;
+  list-style: none;
 }
 
-.footer h6
-{
-  font-size:14px;
-  text-transform:uppercase;
-  margin-top:2px;
+.footer h6 {
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-top: 2px;
 }
 
 .box {
@@ -99,4 +95,8 @@ body {
 
 .box select option {
   padding: 30px;
+}
+
+.tools {
+  margin: auto;
 }
