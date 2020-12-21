@@ -4,8 +4,8 @@ Promise.all([d3.csv("crop.csv"), d3.json("states.json")]).then(showData);
 var mapInfo, reqData, drawSpaceW,drawSpaceH,cropInfo;
 
 function showData(datasources) {
-  drawSpaceH = 600;
-  drawSpaceW = 600;
+  drawSpaceH = 700;
+  drawSpaceW = 700;
 
   cropInfo = datasources[0];
   mapInfo = datasources[1];
@@ -102,9 +102,9 @@ function change(){
   drawSpace
     .append("g")
     .attr("transform", "translate(" + drawSpaceW / 2 + ",0)")
-    .append(() => legend({ color, title: "Efficiency", width: 260,tickFormat: ".2f"}));
+    .append(() => legend({ color, title: "Efficiency (t/ha)", width: 260,tickFormat: ".2f"}));
 
-  let myProjection = d3.geoMercator().scale(950).translate([-1050, 680]);
+  let myProjection = d3.geoMercator().scale(1150).translate([-1300, 820]);
   let geoPath = d3.geoPath().projection(myProjection);
 
   drawSpace
@@ -124,5 +124,5 @@ function change(){
       this.style.opacity = 1;
     })
     .append("title")
-    .text((d) => `${d.properties.st_nm}: ${d.properties.prodPerArea}`);
+    .text((d) => `${d.properties.st_nm}\nProduction: ${prodData[d.properties.st_nm]} tonnes\nArea: ${areaData[d.properties.st_nm]} hectres\nEfficiency: ${d.properties.prodPerArea?d.properties.prodPerArea.toFixed(2):0} t/ha`);
 }
