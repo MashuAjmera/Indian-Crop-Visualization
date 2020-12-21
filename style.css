@@ -43,25 +43,21 @@ body {
   font-family: 'Trebuchet MS';
   line-height:25px;
   color:#737373;
+  display: flex;
+  justify-content: space-evenly;
 }
 .details
 {
   padding-left:0;
   list-style:none
 }
-.details li
-{
-  display:block
-}
+
 .footer h6
 {
   font-size:14px;
   text-transform:uppercase;
   margin-top:2px;
 }
-
-/* background-color: #004882; */
-/* background-color: #0563af; */
 
 .box {
   margin: 10px;
