@@ -1,7 +1,7 @@
 .header {
   padding: 10px;
   text-align: center;
-  background: gray;
+  background: lightyellow;
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
   color: black;
   font-family: 'Trebuchet MS';
@@ -25,7 +25,7 @@ label{
 body {
   margin: 0;
   padding: 0;
-  background-color: gainsboro;
+  background-color: white;
 }
 .problem_statement{
   margin: 10px;
@@ -34,6 +34,32 @@ body {
 #problemstatement{
   
 }
+.footer
+{
+  background-color:lightgoldenrodyellow;
+  padding:15px 0 10px;
+  font-size:15px;
+  box-shadow: 0px 5px 30px rgba(0, 0, 0, 0.5);
+  font-family: 'Trebuchet MS';
+  line-height:25px;
+  color:#737373;
+}
+.details
+{
+  padding-left:0;
+  list-style:none
+}
+.details li
+{
+  display:block
+}
+.footer h6
+{
+  font-size:14px;
+  text-transform:uppercase;
+  margin-top:2px;
+}
+
 /* background-color: #004882; */
 /* background-color: #0563af; */
 
