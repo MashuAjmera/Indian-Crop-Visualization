@@ -1,19 +1,80 @@
 .header {
-  padding: 20px;
+  padding: 10px;
   text-align: center;
   background: gray;
-  border-radius: 25px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
   color: black;
-  font-family: "Times New Roman", Times, serif;
+  font-family: 'Trebuchet MS';
   font-size: 20px;
 }
 .visualization {
   margin: auto;
   width: 50%;
   padding: 10px;
-  font-family: "Times New Roman", Times, serif;
+  font-family: 'Trebuchet MS';
   display: flex;
 }
-.dropdown {
+#drawspace{
+  margin: "10px";
+  background-color : white;
+}
+label{
+  color: black;
+  padding: 5px;;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: gainsboro;
+}
+.problem_statement{
   margin: 10px;
+  font-family: 'Trebuchet MS';
+}
+#problemstatement{
+  
+}
+/* background-color: #004882; */
+/* background-color: #0563af; */
+
+.box {
+  margin: 10px;
+}
+
+.box select {
+  background-color: white;
+  color: black;
+  padding: 12px;
+  width: 250px;
+  border: none;
+  font-size: 20px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+  -webkit-appearance: button;
+  appearance: button;
+  outline: none;
+}
+/* 
+.box::before {
+  content: "\f13a";
+  font-family: FontAwesome;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20%;
+  height: 100%;
+  text-align: center;
+  font-size: 28px;
+  line-height: 45px;
+  color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+} */
+
+/* .box:hover::before {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: rgba(255, 255, 255, 0.2);
+} */
+
+.box select option {
+  padding: 30px;
 }

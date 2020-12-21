@@ -13,26 +13,22 @@
 
     <div class="visualization">
       <div>
-        <svg
-          id="drawspace"
-          margin="10px"
-          height="600"
-          width="600"
-          style="border: 1px solid black"
-        ></svg>
+        <svg id="drawspace" height="600" width="600"></svg>
       </div>
-      <div style="margin-left: 30px">
-        <div class="dropdown">
+
+      <div >
+        
+        <div class="box">
           <label for="year">Select Year:</label>
           <select id="year" name="year" onchange="change()"></select>
         </div>
 
-        <div class="dropdown">
+        <div class="box">
           <label for="season">Select Season:</label>
           <select id="season" name="season" onchange="change()"></select>
         </div>
 
-        <div class="dropdown">
+        <div class="box">
           <label for="crop">Select Crop:</label>
           <select id="crop" name="crop" onchange="change()"></select>
         </div>
@@ -41,7 +37,7 @@
 
     <div class="problem_statement">
       <h2>Problem Statement</h2>
-      <p>jkdnflsakdn fdslfndsgn vodsafkn dfvbnoidp</p>
+      <p id="problemstatement">jkdnflsakdn fdslfndsgn vodsafkn dfvbnoidp</p>
     </div>
     <script src="d3.min.js"></script>
     <script src="legend.js"></script>

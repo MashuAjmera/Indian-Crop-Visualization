@@ -93,16 +93,16 @@ function change(){
   let cScale = d3
     .scaleLinear()
     .domain([0, maxProdPerArea])
-    .range(["white", "brown"]);
+    .range(["white", "green"]);
 
-  let color = d3.scaleQuantize([0, maxProdPerArea], d3.schemeReds[6]);
-drawSpace.select("g").remove();
-drawSpace.selectAll("path").remove();
+  let color = d3.scaleQuantize([0, maxProdPerArea], d3.schemeGreens[6]);
+  drawSpace.select("g").remove();
+  drawSpace.selectAll("path").remove();
 
   drawSpace
     .append("g")
     .attr("transform", "translate(" + drawSpaceW / 2 + ",0)")
-    .append(() => legend({ color, title: "Efficiency", width: 260 }));
+    .append(() => legend({ color, title: "Efficiency", width: 260,tickFormat: ".2f"}));
 
   let myProjection = d3.geoMercator().scale(950).translate([-1050, 680]);
   let geoPath = d3.geoPath().projection(myProjection);
