@@ -12,14 +12,16 @@ function showData(datasources) {
 
   let sel = "";
 
+  //Making a list of the crops in the data
   let crop = [...new Set(cropInfo.map((d) => d.Crop))].sort();
   crop.forEach((y) => (sel += `<option value="${y}">${y}</option>`));
-  document.getElementById("crop").innerHTML = sel;
+  document.getElementById("crop").innerHTML = sel; 
 
+  //Making a list of years in the data
   let years = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
   sel = "";
   years.forEach((y) => (sel += `<option value="${y}">${y}</option>`));
-  document.getElementById("year").innerHTML = sel;
+  document.getElementById("year").innerHTML = sel; 
 
   change();
 }
@@ -27,9 +29,10 @@ function showData(datasources) {
 function change() {
   let states = [...new Set(cropInfo.map((d) => d.State_Name))];
 
-  let yearReq = document.getElementById("year").value;
-  let cropReq = document.getElementById("crop").value;
+  let yearReq = document.getElementById("year").value; // Taking the input of the crop from user
+  let cropReq = document.getElementById("crop").value; // Taking the input of the year from user
 
+  //Taking the required data from the main data
   let cropInfoDist = {};
   cropInfoDist = cropInfo
     .map((d) => {
@@ -37,6 +40,7 @@ function change() {
     })
     .filter((d) => d);
 
+  //Extracting the production values
   let prodData = {};
   for (let c of cropInfoDist) {
     let state = c.State_Name;
@@ -46,6 +50,7 @@ function change() {
     }
   }
 
+  //Extracting the area used for production
   let areaData = {};
   for (let c of cropInfoDist) {
     let state = c.State_Name;
@@ -55,6 +60,7 @@ function change() {
     }
   }
 
+  //Making a list of the (production/area) statewise 
   reqData = {};
   for (let state of states) {
     if (state in prodData && state in areaData) {
@@ -64,6 +70,7 @@ function change() {
     }
   }
 
+  //Merging the data that is to be display with the map data
   mapInfo.features = mapInfo.features.map((d) => {
     let state = d.properties.st_nm;
     let prodPerArea = reqData[state];
@@ -76,6 +83,7 @@ function change() {
     (d) => d.properties.prodPerArea
   );
 
+  //Color Scale for the data
   let cScale = d3
     .scaleLinear()
     .domain([0, maxProdPerArea])
@@ -86,6 +94,7 @@ function change() {
   drawSpace.selectAll("path").remove();
   d3.select("#statespace").select("svg").remove();
 
+  //Adding the tags/area where map would be drawn
   drawSpace
     .append("g")
     .attr("transform", "translate(" + drawSpaceW / 2 + ",0)")
@@ -101,6 +110,7 @@ function change() {
   let myProjection = d3.geoMercator().scale(1150).translate([-1300, 820]);
   let geoPath = d3.geoPath().projection(myProjection);
 
+  //Creating the map and functionality to it.
   drawSpace
     .selectAll("path")
     .data(mapInfo.features)
@@ -117,7 +127,7 @@ function change() {
     .on("mouseout", function () {
       this.style.opacity = 1;
     })
-    .on("click", (event, d) => state(event, d, cropReq))
+    .on("click", (event, d) => state(event, d, cropReq)) //Creates a line chart of the state for the selected crop over the years
     .append("title")
     .text(
       (d) =>
@@ -135,10 +145,13 @@ function change() {
   ).innerHTML = `Click on a region to see the trend of ${cropReq} crop there over the years.`;
 }
 
+//For Creating the line chart 
+// Line Chart is for the state wise production of the selected crop over the years
 function state(event, d, cropReq) {
   let years = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
   let stateReq = d.properties.st_nm;
 
+  //Selecting the data for the selected state and crop
   let cropInfoDistGraph = {};
   cropInfoDistGraph = cropInfo
     .map((d) => {
@@ -146,6 +159,7 @@ function state(event, d, cropReq) {
     })
     .filter((d) => d);
 
+  //Extracting the prodction values 
   let prodDataGraph = {};
   for (let c of cropInfoDistGraph) {
     let year = c.Crop_Year;
@@ -156,6 +170,7 @@ function state(event, d, cropReq) {
     }
   }
 
+  //Extracting the prodction values 
   let areaDataGraph = {};
   for (let c of cropInfoDistGraph) {
     let year = c.Crop_Year;
@@ -165,6 +180,7 @@ function state(event, d, cropReq) {
     }
   }
 
+  //Making a list of the production/area yearwise 
   let reqDataGraph = [];
   for (let year of years) {
     reqDataGraph.push({
