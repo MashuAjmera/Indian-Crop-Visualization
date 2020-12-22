@@ -16,9 +16,9 @@ function showData(datasources) {
   crop.forEach(y=>sel+=`<option value="${y}">${y}</option>`)
   document.getElementById("crop").innerHTML= sel;
   
-  let year = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
+  let years = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
   sel='';
-  year.forEach(y=>sel+=`<option value="${y}">${y}</option>`)
+  years.forEach(y=>sel+=`<option value="${y}">${y}</option>`)
   document.getElementById("year").innerHTML= sel;
 
   let season = [...new Set(cropInfo.map((d) => d.Season))].sort();
@@ -129,5 +129,44 @@ function change(){
 }
 
 function state(d,cropReq){
+
+  let cropInfoDistGraph = {};
+  cropInfoDistGraph = cropInfo
+    .map((d) => {
+      if (stateReq == d.State_Name && cropReq == d.Crop) return d;
+    })
+    .filter((d) => d);
+  // console.log(cropInfoDist);
+
+  let prodDataGraph = {};
+  for (let c of cropInfoDistGraph) {
+    let year = c.Crop_Year;
+    if (parseFloat(c.Production) !== NaN || c.Production !== "") {
+      if (state in prodDataGraph) prodDataGraph[year] += parseFloat(c.Production);
+      else prodDataGraph[year] = parseFloat(c.Production);
+    }
+  }
+  // console.log(prodDataGraph)
+
+  let areaDataGraph = {};
+  for (let c of cropInfoDistGraph) {
+    let year = c.Crop_Year;
+    if (parseFloat(c.Area) !== NaN || c.Area !== "") {
+      if (state in areaDataGraph) areaDataGraph[year] += parseFloat(c.Area);
+      else areaDataGraph[year] = parseFloat(c.Area);
+    }
+  }
+  // console.log(areaDataGraph)
+
+  reqDataGraph = {};
+  for (let year of years) {
+    if (year in prodDataGraph && state in areaDataGraph) {
+      reqData[year] = prodDataGraph[year] / areaData[year];
+    } else {
+      reqDataGraph[year] = 0;
+    }
+  }
+
+  console.log(reqDataGraph)
 
 }
