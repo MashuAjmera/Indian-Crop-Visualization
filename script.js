@@ -136,6 +136,9 @@ function change() {
         } t/ha`
     );
 
+  document.getElementById("loading-container").style.visibility = "hidden";
+  
+
   document.getElementById(
     "guideText"
   ).innerHTML = `Click on a region to see the details of ${cropReq} crop and crops grown in ${yearReq} there.`;

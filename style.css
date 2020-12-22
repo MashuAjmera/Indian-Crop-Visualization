@@ -71,7 +71,7 @@ body {
   appearance: button;
   outline: none;
 }
-.loading-container {
+#loading-container {
 	position: absolute;
 	left: 50%;
 	top: 50%;
