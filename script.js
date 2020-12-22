@@ -193,7 +193,7 @@ function state(event, d, cropReq) {
   // console.log(reqDataGraph)
 
   // set the dimensions and margins of the graph
-  var margin = { top: 10, right: 30, bottom: 30, left: 60 },
+  var margin = { top: 40, right: 30, bottom: 30, left: 60 },
     width = 1000 - margin.left - margin.right,
     height = 200 - margin.top - margin.bottom;
 
@@ -216,23 +216,50 @@ function state(event, d, cropReq) {
     d.price = d.price;
   });
 
+  //x axis scale
   var xScale = d3
     .scaleTime()
     .domain(d3.extent(reqDataGraph, (d) => d.date))
     .range([0, width]);
 
-  // Add Y axis
+  // Y axis scale
   var yScale = d3
     .scaleLinear()
     .domain([0, d3.max(reqDataGraph, (d) => d.value)])
     .range([height, 0]);
 
+  //drawing x axis
   svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(xScale));
+   
+  //labelling x axis  
+  svg.append("text")             
+    .attr("transform",
+          "translate(" + (width/2) + " ," + 
+                          (height + margin.top + 20) + ")")
+    .style("text-anchor", "middle")
+    .text("Year");
+
+    // drawing y axis
   svg.append("g").call(d3.axisLeft(yScale));
 
+  //labelling x axis
+  svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Efficiency");
+
+  svg.append("text")
+    .attr("x", (width / 2))             
+    .attr("y", 0 - (margin.top / 2))
+    .attr("text-anchor", "middle")  
+    .style("font-size", "16px")  
+    .text(`Production efficiency of ${cropReq} in state ${stateReq} over the years`);
   // Add the line
   svg
     .append("path")
@@ -246,5 +273,6 @@ function state(event, d, cropReq) {
         .line()
         .x((d) => xScale(d.date))
         .y((d) => yScale(d.value))
+        .defined((d) => !!d.value)
     );
 }

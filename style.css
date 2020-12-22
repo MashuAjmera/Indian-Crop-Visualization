@@ -98,7 +98,9 @@ body {
 	animation-duration: 2s;
 	animation-iteration-count: infinite;
 }
-
+#statespace{
+  margin: 10px;
+}
 .left-circle {
 	animation-name: left-circle;
 	animation-timing-function: ease-in;
