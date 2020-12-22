@@ -193,7 +193,7 @@ function state(event, d, cropReq) {
   // console.log(reqDataGraph)
 
   // set the dimensions and margins of the graph
-  var margin = { top: 40, right: 30, bottom: 30, left: 60 },
+  var margin = { top: 40, right: 30, bottom: 60, left: 60 },
     width = 1000 - margin.left - margin.right,
     height = 200 - margin.top - margin.bottom;
 
@@ -245,7 +245,7 @@ function state(event, d, cropReq) {
     // drawing y axis
   svg.append("g").call(d3.axisLeft(yScale));
 
-  //labelling x axis
+  //labelling y axis
   svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left)

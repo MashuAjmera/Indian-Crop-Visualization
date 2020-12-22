@@ -54,7 +54,28 @@ body {
   text-transform: uppercase;
   margin-top: 2px;
 }
-
+.strengthAndWeakness{
+  padding: 15px 0 10px;
+  font-size: 15px;
+  font-family: "Trebuchet MS";
+  line-height: 25px;
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 25px;
+}
+.strengthAndWeakness h6 {
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.weakness {
+  padding-left: 0;
+  color: red;
+}
+.strength {
+  padding-left: 0;
+  color: green;
+}
 .box {
   margin: 10px;
 }
