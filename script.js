@@ -15,6 +15,7 @@ function showData(datasources) {
   let crop = [...new Set(cropInfo.map((d) => d.Crop))].sort();
   crop.forEach((y) => (sel += `<option value="${y}">${y}</option>`));
   document.getElementById("crop").innerHTML = sel;
+  document.getElementById("crop").value = "Rice";
 
   let years = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
   sel = "";
