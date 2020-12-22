@@ -20,7 +20,6 @@ function showData(datasources) {
   sel = "";
   years.forEach((y) => (sel += `<option value="${y}">${y}</option>`));
   document.getElementById("year").innerHTML = sel;
-  // console.log(mapInfo);
 
   change();
 }
@@ -30,8 +29,7 @@ function change() {
 
   let yearReq = document.getElementById("year").value;
   let cropReq = document.getElementById("crop").value;
-  // cropReq = "Rice";
-  console.log(`year: ${yearReq}, crop: ${cropReq}`);
+  cropReq = "Rice";
 
   let cropInfoDist = {};
   cropInfoDist = cropInfo
@@ -39,7 +37,6 @@ function change() {
       if (yearReq == d.Crop_Year && cropReq == d.Crop) return d;
     })
     .filter((d) => d);
-  // console.log(cropInfoDist);
 
   let prodData = {};
   for (let c of cropInfoDist) {
@@ -49,7 +46,6 @@ function change() {
       else prodData[state] = parseFloat(c.Production);
     }
   }
-  // console.log(prodData)
 
   let areaData = {};
   for (let c of cropInfoDist) {
@@ -59,7 +55,6 @@ function change() {
       else areaData[state] = parseFloat(c.Area);
     }
   }
-  // console.log(areaData)
 
   reqData = {};
   for (let state of states) {
@@ -69,7 +64,6 @@ function change() {
       reqData[state] = 0;
     }
   }
-  // console.log(reqData)
 
   mapInfo.features = mapInfo.features.map((d) => {
     let state = d.properties.st_nm;
@@ -77,7 +71,6 @@ function change() {
     d.properties.prodPerArea = prodPerArea;
     return d;
   });
-  // console.log(mapInfo.features)
 
   let maxProdPerArea = d3.max(
     mapInfo.features,
@@ -137,7 +130,6 @@ function change() {
     );
 
   document.getElementById("loading-container").style.visibility = "hidden";
-  
 
   document.getElementById(
     "guideText"
@@ -145,9 +137,6 @@ function change() {
 }
 
 function state(event, d, cropReq) {
-  // console.log(d)
-  // console.log(cropReq)
-
   let years = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
   let stateReq = d.properties.st_nm;
 
@@ -157,7 +146,6 @@ function state(event, d, cropReq) {
       if (stateReq == d.State_Name && cropReq == d.Crop) return d;
     })
     .filter((d) => d);
-  // console.log(cropInfoDistGraph);
 
   let prodDataGraph = {};
   for (let c of cropInfoDistGraph) {
@@ -168,7 +156,6 @@ function state(event, d, cropReq) {
       else prodDataGraph[year] = parseFloat(c.Production);
     }
   }
-  // console.log(prodDataGraph)
 
   let areaDataGraph = {};
   for (let c of cropInfoDistGraph) {
@@ -178,7 +165,6 @@ function state(event, d, cropReq) {
       else areaDataGraph[year] = parseFloat(c.Area);
     }
   }
-  // console.log(areaDataGraph)
 
   let reqDataGraph = [];
   for (let year of years) {
@@ -190,17 +176,15 @@ function state(event, d, cropReq) {
           : 0,
     });
   }
-  // console.log(reqDataGraph)
 
   // set the dimensions and margins of the graph
   var margin = { top: 10, right: 30, bottom: 30, left: 60 },
     width = 1000 - margin.left - margin.right,
     height = 200 - margin.top - margin.bottom;
 
-  // append the svg object to the body of the page
-
   d3.select("#statespace").select("svg").remove();
 
+  // append the svg object to the body of the page
   var svg = d3
     .select("#statespace")
     .append("svg")
@@ -220,8 +204,6 @@ function state(event, d, cropReq) {
     .scaleTime()
     .domain(d3.extent(reqDataGraph, (d) => d.date))
     .range([0, width]);
-
-  // Add Y axis
   var yScale = d3
     .scaleLinear()
     .domain([0, d3.max(reqDataGraph, (d) => d.value)])
