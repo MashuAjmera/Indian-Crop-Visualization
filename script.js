@@ -29,7 +29,6 @@ function change() {
 
   let yearReq = document.getElementById("year").value;
   let cropReq = document.getElementById("crop").value;
-  cropReq = "Rice";
 
   let cropInfoDist = {};
   cropInfoDist = cropInfo
@@ -133,7 +132,7 @@ function change() {
 
   document.getElementById(
     "guideText"
-  ).innerHTML = `Click on a region to see the details of ${cropReq} crop and crops grown in ${yearReq} there.`;
+  ).innerHTML = `Click on a region to see the trend of ${cropReq} crop there over the years.`;
 }
 
 function state(event, d, cropReq) {
@@ -247,9 +246,7 @@ function state(event, d, cropReq) {
     .attr("y", 0 - margin.top / 2)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
-    .text(
-      `Production efficiency of ${cropReq} in state ${stateReq} over the years`
-    );
+    .text(`Production efficiency of ${cropReq} in ${stateReq} over the years`);
   // Add the line
   svg
     .append("path")
