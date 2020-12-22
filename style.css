@@ -71,27 +71,81 @@ body {
   appearance: button;
   outline: none;
 }
-/* 
-.box::before {
-  content: "\f13a";
-  font-family: FontAwesome;
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 20%;
-  height: 100%;
-  text-align: center;
-  font-size: 28px;
-  line-height: 45px;
-  color: rgba(255, 255, 255, 0.5);
-  background-color: rgba(255, 255, 255, 0.1);
-  pointer-events: none;
-} */
+.loading-container {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
 
-/* .box:hover::before {
-  color: rgba(255, 255, 255, 0.6);
-  background-color: rgba(255, 255, 255, 0.2);
-} */
+#loader { 
+	position: relative;
+	top: 50px;
+	left: -25px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	font-size: 50%;
+	color: #000000;
+}
+
+.circle {
+	display: inline-block;
+	position: relative;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: #000000;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+}
+
+.left-circle {
+	animation-name: left-circle;
+	animation-timing-function: ease-in;
+}
+
+@keyframes left-circle {
+	0% { top: 0; }
+	50% { top: 50px; }
+	60% { 
+		transform: scale(1.15); 
+		background-color: rgb(199, 233, 192);
+		opacity: 0.1;
+	}
+	100% { top: 0px; }
+}
+
+.middle-circle {
+	animation-name: middle-circle;
+	animation-timing-function: linear;
+}
+
+@keyframes middle-circle {
+	0% { top: 0; }
+	50% { 
+		top: 50px; 
+		transform: scale(1.2);
+		opacity: 0.1;
+	}
+	70% { background-color: #09e8e4; }
+	100% { top: 0; }
+}
+
+.right-circle {
+	animation-name: right-circle;
+	animation-timing-function: ease-out;
+}
+
+@keyframes right-circle {
+	0% { top: 0; }
+	50% { 
+		top: 50px; 
+		transform: scale(1.2); 
+		background-color: #09e8e4;
+		opacity: 0.1;
+	}
+	100% { top: 0; }
+}
 
 .box select option {
   padding: 30px;
