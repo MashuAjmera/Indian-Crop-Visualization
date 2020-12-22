@@ -1,3 +1,4 @@
+/* styling header */
 .header {
   padding: 10px;
   text-align: center;
@@ -7,6 +8,7 @@
   font-family: "Trebuchet MS";
   font-size: 20px;
 }
+/* styling visualization area */
 .visualization {
   margin: auto;
   width: 50%;
@@ -15,24 +17,28 @@
   display: flex;
   justify-content: center;
 }
+/* styling svg drawspace */
 #drawspace {
   margin: "10px";
   background-color: white;
 }
+/* styling labels for drpodown */
 label {
   color: black;
   padding: 5px;
 }
+/* styling body of page */
 body {
   margin: 0;
   padding: 0;
   background-color: white;
 }
+/* styling problem statement*/
 .problem_statement {
   margin: 10px;
   font-family: "Trebuchet MS";
 }
-
+/* styling footer of page*/
 .footer {
   background-color: rgb(237, 248, 233);
   padding: 15px 0 10px;
@@ -44,16 +50,18 @@ body {
   display: flex;
   justify-content: space-evenly;
 }
+/* styling details in footer*/
 .details {
   padding-left: 0;
   list-style: none;
 }
-
+/* styling header used in footer */
 .footer h6 {
   font-size: 14px;
   text-transform: uppercase;
   margin-top: 2px;
 }
+/* styling strength and weakness div*/
 .strengthAndWeakness{
   padding: 15px 0 10px;
   font-size: 15px;
@@ -63,23 +71,28 @@ body {
   justify-content: space-evenly;
   margin-bottom: 25px;
 }
+/* styling header in strength and weakness*/
 .strengthAndWeakness h6 {
   font-size: 14px;
   text-transform: uppercase;
   margin-top: 2px;
 }
+/* styling weakness list*/
 .weakness {
   padding-left: 0;
   color: red;
 }
+/* styling strength list*/
 .strength {
   padding-left: 0;
   color: green;
 }
+
+/* styling dropdown div */
 .box {
   margin: 10px;
 }
-
+/* styling each dropdown*/
 .box select {
   background-color: white;
   color: black;
@@ -92,13 +105,28 @@ body {
   appearance: button;
   outline: none;
 }
+
+.box select option {
+  padding: 30px;
+}
+
+.tools {
+  margin: auto;
+}
+
+/* styling statespace of linechart */
+#statespace{
+  margin: 10px;
+}
+
+/* styling loader div*/
 #loading-container {
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
-
+/* styling loader*/
 #loader { 
 	position: relative;
 	top: 50px;
@@ -108,7 +136,7 @@ body {
 	font-size: 50%;
 	color: #000000;
 }
-
+/* styling circles in loader*/
 .circle {
 	display: inline-block;
 	position: relative;
@@ -119,14 +147,11 @@ body {
 	animation-duration: 2s;
 	animation-iteration-count: infinite;
 }
-#statespace{
-  margin: 10px;
-}
+/* styling left circle in loader */
 .left-circle {
 	animation-name: left-circle;
 	animation-timing-function: ease-in;
 }
-
 @keyframes left-circle {
 	0% { top: 0; }
 	50% { top: 50px; }
@@ -137,7 +162,7 @@ body {
 	}
 	100% { top: 0px; }
 }
-
+/* styling middle circle in loader*/
 .middle-circle {
 	animation-name: middle-circle;
 	animation-timing-function: linear;
@@ -154,6 +179,7 @@ body {
 	100% { top: 0; }
 }
 
+/* styling right circle in loader*/
 .right-circle {
 	animation-name: right-circle;
 	animation-timing-function: ease-out;
@@ -170,10 +196,3 @@ body {
 	100% { top: 0; }
 }
 
-.box select option {
-  padding: 30px;
-}
-
-.tools {
-  margin: auto;
-}
