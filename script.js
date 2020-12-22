@@ -123,12 +123,19 @@ function change(){
     .on("mouseout", function () {
       this.style.opacity = 1;
     })
-    .on("click", state(d,cropReq) )
+    .on("click", (event,d)=>state(event,d,cropReq,) )
     .append("title")
     .text((d) => `${d.properties.st_nm}\nProduction: ${prodData[d.properties.st_nm]} tonnes\nArea: ${areaData[d.properties.st_nm]} hectres\nEfficiency: ${d.properties.prodPerArea?d.properties.prodPerArea.toFixed(2):0} t/ha`);
 }
 
-function state(d,cropReq){
+function state(event,d,cropReq){
+
+  // console.log(d)
+  // console.log(cropReq)
+  
+  let years = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
+  
+  let stateReq = d.properties.st_nm;
 
   let cropInfoDistGraph = {};
   cropInfoDistGraph = cropInfo
@@ -136,13 +143,13 @@ function state(d,cropReq){
       if (stateReq == d.State_Name && cropReq == d.Crop) return d;
     })
     .filter((d) => d);
-  // console.log(cropInfoDist);
+  // console.log(cropInfoDistGraph);
 
   let prodDataGraph = {};
   for (let c of cropInfoDistGraph) {
     let year = c.Crop_Year;
     if (parseFloat(c.Production) !== NaN || c.Production !== "") {
-      if (state in prodDataGraph) prodDataGraph[year] += parseFloat(c.Production);
+      if (year in prodDataGraph) prodDataGraph[year] += parseFloat(c.Production);
       else prodDataGraph[year] = parseFloat(c.Production);
     }
   }
@@ -152,7 +159,7 @@ function state(d,cropReq){
   for (let c of cropInfoDistGraph) {
     let year = c.Crop_Year;
     if (parseFloat(c.Area) !== NaN || c.Area !== "") {
-      if (state in areaDataGraph) areaDataGraph[year] += parseFloat(c.Area);
+      if (year in areaDataGraph) areaDataGraph[year] += parseFloat(c.Area);
       else areaDataGraph[year] = parseFloat(c.Area);
     }
   }
@@ -160,13 +167,12 @@ function state(d,cropReq){
 
   reqDataGraph = {};
   for (let year of years) {
-    if (year in prodDataGraph && state in areaDataGraph) {
-      reqData[year] = prodDataGraph[year] / areaData[year];
+    if (year in prodDataGraph && year in areaDataGraph) {
+      reqDataGraph[year] = prodDataGraph[year] / areaDataGraph[year];
     } else {
       reqDataGraph[year] = 0;
     }
   }
 
-  console.log(reqDataGraph)
-
+  // console.log(reqDataGraph)
 }
