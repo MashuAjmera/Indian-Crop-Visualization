@@ -123,11 +123,12 @@ function change(){
     .on("mouseout", function () {
       this.style.opacity = 1;
     })
-    .on("click", state(d,cropReq) )
+    .on("click", (event,d)=>state(event,d,cropReq,) )
     .append("title")
     .text((d) => `${d.properties.st_nm}\nProduction: ${prodData[d.properties.st_nm]} tonnes\nArea: ${areaData[d.properties.st_nm]} hectres\nEfficiency: ${d.properties.prodPerArea?d.properties.prodPerArea.toFixed(2):0} t/ha`);
 }
 
-function state(d,cropReq){
-
+function state(event,d,cropReq){
+console.log(d);
+console.log(cropReq);
 }
