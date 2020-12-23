@@ -228,7 +228,7 @@ function state(event, d, cropReq) {
     .domain([0, d3.max(reqDataGraph, (d) => d.value)])
     .range([height, 0]);
 
-    // append the svg object to the body of the page
+  // append the svg object to the body of the page
   var svg = d3
   .select("#statespace")
   .append("svg")
@@ -237,7 +237,7 @@ function state(event, d, cropReq) {
   .append("g")
   .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
   
-  
+  // X Gridlines
   svg.append("g")			
       .attr("class", "grid")
       .style("opacity","0.3")
@@ -247,7 +247,7 @@ function state(event, d, cropReq) {
           .tickFormat("")
       )
 
-  // add the Y gridlines
+  // Y Gridlines
   svg.append("g")			
       .attr("class", "grid")
       .style("opacity","0.3")
@@ -299,15 +299,17 @@ function state(event, d, cropReq) {
   svg
     .append("path")
     .datum(reqDataGraph)
-    .attr("fill", "none")
-    .attr("stroke", "green")
+    .attr("fill", "rgb(176,215,176)")
+    .style("opacity","0.6")
+    .attr("stroke", "rgb(49,163,84)")
     .attr("stroke-width", 1.5)
     .attr(
       "d",
       d3
-        .line()
+        .area()
         .x((d) => xScale(d.date))
-        .y((d) => yScale(d.value))
+        .y0(yScale(0))
+        .y1((d) => yScale(d.value))
         .defined((d) => !!d.value)
     );
 }
