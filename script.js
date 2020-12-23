@@ -204,8 +204,8 @@ function state(event, d, cropReq) {
 
   // set the dimensions and margins of the graph
   var margin = { top: 40, right: 30, bottom: 60, left: 60 },
-    width = 1000 - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
+    width = 700 - margin.left - margin.right,
+    height = 350 - margin.top - margin.bottom;
 
   // removing the already created line chart(if any) before creating a new one
   d3.select("#statespace").select("svg").remove();
@@ -214,7 +214,6 @@ function state(event, d, cropReq) {
   var parseDate = d3.timeParse("%Y");
   reqDataGraph.forEach(function (d) {
     d.date = parseDate(d.date);
-    d.price = d.price;
   });
 
   // x axis scale
@@ -274,8 +273,10 @@ function state(event, d, cropReq) {
     .text("Year");
 
   // drawing y axis
-  svg.append("g").call(d3.axisLeft(yScale));
-
+  var axisleft=d3.axisLeft(yScale);
+  axisleft.ticks(10)
+  svg.append("g").call(axisleft);
+ 
   //labelling y axis
   svg
     .append("text")

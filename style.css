@@ -61,32 +61,6 @@ body {
   text-transform: uppercase;
   margin-top: 2px;
 }
-/* styling strength and weakness div*/
-.strengthAndWeakness{
-  padding: 15px 0 10px;
-  font-size: 15px;
-  font-family: "Trebuchet MS";
-  line-height: 25px;
-  display: flex;
-  justify-content: space-evenly;
-  margin-bottom: 25px;
-}
-/* styling header in strength and weakness*/
-.strengthAndWeakness h6 {
-  font-size: 14px;
-  text-transform: uppercase;
-  margin-top: 2px;
-}
-/* styling weakness list*/
-.weakness {
-  padding-left: 0;
-  color: red;
-}
-/* styling strength list*/
-.strength {
-  padding-left: 0;
-  color: green;
-}
 
 /* styling dropdown div */
 .box {
