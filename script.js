@@ -210,15 +210,6 @@ function state(event, d, cropReq) {
   // removing the already created line chart(if any) before creating a new one
   d3.select("#statespace").select("svg").remove();
 
-  // append the svg object to the body of the page
-  var svg = d3
-    .select("#statespace")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
   // Formatting the Data
   var parseDate = d3.timeParse("%Y");
   reqDataGraph.forEach(function (d) {
@@ -237,6 +228,34 @@ function state(event, d, cropReq) {
     .scaleLinear()
     .domain([0, d3.max(reqDataGraph, (d) => d.value)])
     .range([height, 0]);
+
+    // append the svg object to the body of the page
+  var svg = d3
+  .select("#statespace")
+  .append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+  .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+  
+  
+  svg.append("g")			
+      .attr("class", "grid")
+      .style("opacity","0.3")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(xScale).ticks(5)
+          .tickSize(-height)
+          .tickFormat("")
+      )
+
+  // add the Y gridlines
+  svg.append("g")			
+      .attr("class", "grid")
+      .style("opacity","0.3")
+      .call(d3.axisLeft(yScale).ticks(5)
+          .tickSize(-width)
+          .tickFormat("")
+      )
 
   //drawing x axis
   svg
