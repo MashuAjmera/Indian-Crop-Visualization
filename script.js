@@ -112,8 +112,6 @@ function change() {
 
   // Adding the legend
   drawSpace
-    .select("g")
-    .remove()
     .append("g")
     .attr("transform", "translate(" + drawSpaceW / 2 + ",0)")
     .append(() =>
