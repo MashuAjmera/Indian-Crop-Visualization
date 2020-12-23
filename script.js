@@ -1,4 +1,7 @@
+// Selecting the svg element
 let drawSpace = d3.select("#drawspace");
+
+// Reading the dataset and the geoJSON file for India
 Promise.all([d3.csv("crop.csv"), d3.json("states.json")]).then(showData);
 
 var mapInfo, reqData, drawSpaceW, drawSpaceH, cropInfo;
@@ -7,26 +10,32 @@ function showData(datasources) {
   drawSpaceH = 700;
   drawSpaceW = 700;
 
+  // Saving the array read file into variavles
   cropInfo = datasources[0];
   mapInfo = datasources[1];
 
-  let sel = "";
-
   //Making a list of the crops in the data
+  let sel = "";
   let crop = [...new Set(cropInfo.map((d) => d.Crop))].sort();
+  // Creating the select option dynamically using all the crops in the dataset
   crop.forEach((y) => (sel += `<option value="${y}">${y}</option>`));
-  document.getElementById("crop").innerHTML = sel; 
+  document.getElementById("crop").innerHTML = sel;
+  // Making rice the default crop selected
+  document.getElementById("crop").value = "Rice";
 
   //Making a list of years in the data
   let years = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
   sel = "";
+  // Creating the select option dynamically using all the years in the dataset
   years.forEach((y) => (sel += `<option value="${y}">${y}</option>`));
-  document.getElementById("year").innerHTML = sel; 
+  document.getElementById("year").innerHTML = sel;
 
+  // Calling the change function which calculates the values and draws the svg
   change();
 }
 
 function change() {
+  //Making a list of states in the data
   let states = [...new Set(cropInfo.map((d) => d.State_Name))];
 
   let yearReq = document.getElementById("year").value; // Taking the input of the crop from user
@@ -60,7 +69,7 @@ function change() {
     }
   }
 
-  //Making a list of the (production/area) statewise 
+  //Making a list of the (production/area) statewise
   reqData = {};
   for (let state of states) {
     if (state in prodData && state in areaData) {
@@ -78,6 +87,7 @@ function change() {
     return d;
   });
 
+  // calculating the maximum Production per area for efficiency to make the color scale and legend
   let maxProdPerArea = d3.max(
     mapInfo.features,
     (d) => d.properties.prodPerArea
@@ -90,11 +100,13 @@ function change() {
     .range(["white", "green"]);
 
   let color = d3.scaleQuantize([0, maxProdPerArea], d3.schemeGreens[6]);
+
+  // removing the already created svgs before redrawing the new one
   drawSpace.select("g").remove();
   drawSpace.selectAll("path").remove();
   d3.select("#statespace").select("svg").remove();
 
-  //Adding the tags/area where map would be drawn
+  // Adding the legend
   drawSpace
     .append("g")
     .attr("transform", "translate(" + drawSpaceW / 2 + ",0)")
@@ -107,6 +119,7 @@ function change() {
       })
     );
 
+  //  Using geoMercator for our map projection
   let myProjection = d3.geoMercator().scale(1150).translate([-1300, 820]);
   let geoPath = d3.geoPath().projection(myProjection);
 
@@ -128,7 +141,7 @@ function change() {
       this.style.opacity = 1;
     })
     .on("click", (event, d) => state(event, d, cropReq)) //Creates a line chart of the state for the selected crop over the years
-    .append("title")
+    .append("title") // shows a title tooltip to display region's information on hover
     .text(
       (d) =>
         `${d.properties.st_nm}\nProduction: ${
@@ -138,14 +151,16 @@ function change() {
         } t/ha`
     );
 
-  document.getElementById("loading-container").style.visibility = "hidden";
+  // stopping the loader after svg has been created
+  document.getElementById("loading-container").style.display = "none";
 
+  // displaying information for user aid
   document.getElementById(
     "guideText"
   ).innerHTML = `Click on a region to see the trend of ${cropReq} crop there over the years.`;
 }
 
-//For Creating the line chart 
+//For Creating the line chart
 // Line Chart is for the state wise production of the selected crop over the years
 function state(event, d, cropReq) {
   let years = [...new Set(cropInfo.map((d) => d.Crop_Year))].sort();
@@ -159,7 +174,7 @@ function state(event, d, cropReq) {
     })
     .filter((d) => d);
 
-  //Extracting the prodction values 
+  //Extracting the prodction values by summing over all the production values for each year
   let prodDataGraph = {};
   for (let c of cropInfoDistGraph) {
     let year = c.Crop_Year;
@@ -170,7 +185,7 @@ function state(event, d, cropReq) {
     }
   }
 
-  //Extracting the prodction values 
+  //Extracting the area values by summing over all the areas for each year
   let areaDataGraph = {};
   for (let c of cropInfoDistGraph) {
     let year = c.Crop_Year;
@@ -180,7 +195,7 @@ function state(event, d, cropReq) {
     }
   }
 
-  //Making a list of the production/area yearwise 
+  //Making a list of the efficiecny= production/area yearwise
   let reqDataGraph = [];
   for (let year of years) {
     reqDataGraph.push({
@@ -197,6 +212,7 @@ function state(event, d, cropReq) {
     width = 1000 - margin.left - margin.right,
     height = 200 - margin.top - margin.bottom;
 
+  // removing the already created line chart(if any) before creating a new one
   d3.select("#statespace").select("svg").remove();
 
   // append the svg object to the body of the page
@@ -208,14 +224,14 @@ function state(event, d, cropReq) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  /* Format Data */
+  // Formatting the Data
   var parseDate = d3.timeParse("%Y");
   reqDataGraph.forEach(function (d) {
     d.date = parseDate(d.date);
     d.price = d.price;
   });
 
-  //x axis scale
+  // x axis scale
   var xScale = d3
     .scaleTime()
     .domain(d3.extent(reqDataGraph, (d) => d.date))
@@ -263,6 +279,7 @@ function state(event, d, cropReq) {
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .text(`Production efficiency of ${cropReq} in ${stateReq} over the years`);
+
   // Add the line
   svg
     .append("path")
