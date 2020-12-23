@@ -105,12 +105,13 @@ function change() {
   let color = d3.scaleQuantize([0, maxProdPerArea], d3.schemeGreens[6]);
 
   // removing the already created svgs before redrawing the new one
-  drawSpace.select("g").remove();
-  drawSpace.selectAll("path").remove();
   d3.select("#statespace").select("svg").remove();
+  d3.select("#barspace").select("svg").remove();
 
   // Adding the legend
   drawSpace
+    .select("g")
+    .remove()
     .append("g")
     .attr("transform", "translate(" + drawSpaceW / 2 + ",0)")
     .append(() =>
