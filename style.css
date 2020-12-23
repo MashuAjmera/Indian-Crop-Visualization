@@ -1,12 +1,11 @@
 /* styling header */
-.header {
+header {
   padding: 10px;
   text-align: center;
   background: rgb(199, 233, 192);
   box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
   color: black;
   font-family: "Trebuchet MS";
-  font-size: 20px;
 }
 /* styling visualization area */
 .visualization {
@@ -35,7 +34,7 @@ body {
 }
 /* styling problem statement*/
 .problem_statement {
-  margin: 10px;
+  margin: 0em 3em 1em 3em;
   font-family: "Trebuchet MS";
 }
 /* styling footer of page*/
@@ -64,13 +63,14 @@ body {
 
 /* styling dropdown div */
 .box {
-  margin: 10px;
+  margin-bottom: 20px;
 }
 /* styling each dropdown*/
 .box select {
   background-color: white;
   color: black;
   padding: 12px;
+  margin-top: 10px;
   width: 250px;
   border: none;
   font-size: 20px;
@@ -85,88 +85,113 @@ body {
 }
 
 .tools {
-  margin: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 /* styling statespace of linechart */
-#statespace{
+#statespace {
   margin: 10px;
 }
 
 /* styling loader div*/
 #loading-container {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 /* styling loader*/
-#loader { 
-	position: relative;
-	top: 50px;
-	left: -25px;
-	letter-spacing: 1px;
-	text-transform: uppercase;
-	font-size: 50%;
-	color: #000000;
+#loader {
+  position: relative;
+  top: 50px;
+  left: -25px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 50%;
+  color: #000000;
 }
 /* styling circles in loader*/
 .circle {
-	display: inline-block;
-	position: relative;
-	width: 20px;
-	height: 20px;
-	border-radius: 50%;
-	background-color: #000000;
-	animation-duration: 2s;
-	animation-iteration-count: infinite;
+  display: inline-block;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #000000;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
 }
 /* styling left circle in loader */
 .left-circle {
-	animation-name: left-circle;
-	animation-timing-function: ease-in;
+  animation-name: left-circle;
+  animation-timing-function: ease-in;
 }
 @keyframes left-circle {
-	0% { top: 0; }
-	50% { top: 50px; }
-	60% { 
-		transform: scale(1.15); 
-		background-color: rgb(199, 233, 192);
-		opacity: 0.1;
-	}
-	100% { top: 0px; }
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 50px;
+  }
+  60% {
+    transform: scale(1.15);
+    background-color: rgb(199, 233, 192);
+    opacity: 0.1;
+  }
+  100% {
+    top: 0px;
+  }
 }
 /* styling middle circle in loader*/
 .middle-circle {
-	animation-name: middle-circle;
-	animation-timing-function: linear;
+  animation-name: middle-circle;
+  animation-timing-function: linear;
 }
 
 @keyframes middle-circle {
-	0% { top: 0; }
-	50% { 
-		top: 50px; 
-		transform: scale(1.2);
-		opacity: 0.1;
-	}
-	70% { background-color: #09e8e4; }
-	100% { top: 0; }
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 50px;
+    transform: scale(1.2);
+    opacity: 0.1;
+  }
+  70% {
+    background-color: #09e8e4;
+  }
+  100% {
+    top: 0;
+  }
 }
 
 /* styling right circle in loader*/
 .right-circle {
-	animation-name: right-circle;
-	animation-timing-function: ease-out;
+  animation-name: right-circle;
+  animation-timing-function: ease-out;
 }
 
 @keyframes right-circle {
-	0% { top: 0; }
-	50% { 
-		top: 50px; 
-		transform: scale(1.2); 
-		background-color: #09e8e4;
-		opacity: 0.1;
-	}
-	100% { top: 0; }
+  0% {
+    top: 0;
+  }
+  50% {
+    top: 50px;
+    transform: scale(1.2);
+    background-color: #09e8e4;
+    opacity: 0.1;
+  }
+  100% {
+    top: 0;
+  }
 }
 
+.additional {
+  display: flex;
+}
+
+main {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
