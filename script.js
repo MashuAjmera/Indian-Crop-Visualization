@@ -143,7 +143,10 @@ function change() {
     .on("mouseout", function () {
       this.style.opacity = 1;
     })
-    .on("click", (event, d) => state(event, d, cropReq)) //Creates a line chart of the state for the selected crop over the years
+    .on("click", (event, d) => {
+      state(event, d, cropReq);
+      bar(event, d, yearReq);
+    }) //Creates a line chart of the state for the selected crop over the years
     .append("title") // shows a title tooltip to display region's information on hover
     .text(
       (d) =>
@@ -230,31 +233,27 @@ function state(event, d, cropReq) {
 
   // append the svg object to the body of the page
   var svg = d3
-  .select("#statespace")
-  .append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-  
-  // X Gridlines
-  svg.append("g")			
-      .attr("class", "grid")
-      .style("opacity","0.3")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(xScale).ticks(5)
-          .tickSize(-height)
-          .tickFormat("")
-      )
+    .select("#statespace")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  // Y Gridlines
-  svg.append("g")			
-      .attr("class", "grid")
-      .style("opacity","0.3")
-      .call(d3.axisLeft(yScale).ticks(5)
-          .tickSize(-width)
-          .tickFormat("")
-      )
+  // // X Gridlines
+  // svg
+  //   .append("g")
+  //   .attr("class", "grid")
+  //   .style("opacity", "0.3")
+  //   .attr("transform", "translate(0," + height + ")")
+  //   .call(d3.axisBottom(xScale).ticks(5).tickSize(-height).tickFormat(""));
+
+  // // Y Gridlines
+  // svg
+  //   .append("g")
+  //   .attr("class", "grid")
+  //   .style("opacity", "0.3")
+  //   .call(d3.axisLeft(yScale).ticks(5).tickSize(-width).tickFormat(""));
 
   //drawing x axis
   svg
@@ -273,10 +272,10 @@ function state(event, d, cropReq) {
     .text("Year");
 
   // drawing y axis
-  var axisleft=d3.axisLeft(yScale);
-  axisleft.ticks(10)
+  var axisleft = d3.axisLeft(yScale);
+  axisleft.ticks(10);
   svg.append("g").call(axisleft);
- 
+
   //labelling y axis
   svg
     .append("text")
@@ -299,8 +298,9 @@ function state(event, d, cropReq) {
   svg
     .append("path")
     .datum(reqDataGraph)
-    .attr("fill", "rgb(176,215,176)")
-    .style("opacity","0.6")
+    // .attr("fill", "rgb(176,215,176)")
+    .attr("fill", "#69b3a2")
+    .style("opacity", "0.6")
     .attr("stroke", "rgb(49,163,84)")
     .attr("stroke-width", 1.5)
     .attr(
@@ -312,4 +312,111 @@ function state(event, d, cropReq) {
         .y1((d) => yScale(d.value))
         .defined((d) => !!d.value)
     );
+}
+
+function bar(event, d, yearReq) {
+  let crops = [...new Set(cropInfo.map((d) => d.Crop))].sort();
+  let stateReq = d.properties.st_nm;
+
+  //Selecting the data for the selected state and crop
+  let cropInfoDistGraph = {};
+  cropInfoDistGraph = cropInfo
+    .map((d) => {
+      if (stateReq == d.State_Name && yearReq == d.Crop_Year) return d;
+    })
+    .filter((d) => d);
+
+  //Extracting the prodction values by summing over all the production values for each year
+  let prodDataGraph = {};
+  for (let c of cropInfoDistGraph) {
+    let crop = c.Crop;
+    if (parseFloat(c.Production) !== NaN || c.Production !== "") {
+      if (crop in prodDataGraph)
+        prodDataGraph[crop] += parseFloat(c.Production);
+      else prodDataGraph[crop] = parseFloat(c.Production);
+    }
+  }
+
+  //Extracting the area values by summing over all the areas for each year
+  let areaDataGraph = {};
+  for (let c of cropInfoDistGraph) {
+    let crop = c.Crop;
+    if (parseFloat(c.Area) !== NaN || c.Area !== "") {
+      if (crop in areaDataGraph) areaDataGraph[crop] += parseFloat(c.Area);
+      else areaDataGraph[crop] = parseFloat(c.Area);
+    }
+  }
+
+  //Making a list of the efficiecny= production/area yearwise
+  let reqDataGraph = [];
+  for (let crop of crops) {
+    if (crop in prodDataGraph && crop in areaDataGraph) {
+      reqDataGraph.push({
+        crop: crop,
+        value: prodDataGraph[crop] / areaDataGraph[crop],
+      });
+    }
+  }
+
+  console.log(reqDataGraph);
+
+  // set the dimensions and margins of the graph
+  var margin = { top: 30, right: 30, bottom: 80, left: 70 },
+    width = 700 - margin.left - margin.right,
+    height = 350 - margin.top - margin.bottom;
+
+  // removing the already created line chart(if any) before creating a new one
+  d3.select("#barspace").select("svg").remove();
+
+  // append the svg object to the body of the page
+  var svg = d3
+    .select("#barspace")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  // X axis
+  var x = d3
+    .scaleBand()
+    .range([0, width])
+    .domain(
+      reqDataGraph.map(function (d) {
+        return d.crop;
+      })
+    )
+    .padding(0.2);
+  svg
+    .append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+  // Add Y axis
+  var y = d3
+    .scaleLinear()
+    .domain([0, d3.max(reqDataGraph, (d) => d.value)])
+    .range([height, 0]);
+  svg.append("g").call(d3.axisLeft(y));
+
+  // Bars
+  svg
+    .selectAll("rect")
+    .data(reqDataGraph)
+    .enter()
+    .append("rect")
+    .attr("x", function (d) {
+      return x(d.crop);
+    })
+    .attr("y", function (d) {
+      return y(d.value);
+    })
+    .attr("width", x.bandwidth())
+    .attr("height", function (d) {
+      return height - y(d.value);
+    })
+    .attr("fill", "#69b3a2");
 }
