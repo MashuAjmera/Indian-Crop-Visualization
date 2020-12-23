@@ -284,7 +284,7 @@ function state(event, d, cropReq) {
     .attr("x", 0 - height / 2)
     .attr("dy", "1em")
     .style("text-anchor", "middle")
-    .text("Efficiency");
+    .text("Efficiency (tonne/ha)");
 
   svg
     .append("text")
@@ -361,9 +361,9 @@ function bar(event, d, yearReq) {
   console.log(reqDataGraph);
 
   // set the dimensions and margins of the graph
-  var margin = { top: 30, right: 30, bottom: 80, left: 70 },
+  var margin = { top: 40, right: 30, bottom: 150, left: 70 },
     width = 700 - margin.left - margin.right,
-    height = 350 - margin.top - margin.bottom;
+    height = 450 - margin.top - margin.bottom;
 
   // removing the already created line chart(if any) before creating a new one
   d3.select("#barspace").select("svg").remove();
@@ -387,6 +387,18 @@ function bar(event, d, yearReq) {
       })
     )
     .padding(0.2);
+
+
+    svg
+    .append("text")
+    .attr(
+      "transform",
+      "translate(" + width / 2 + " ," + (height + margin.top + 80) + ")"
+    )
+    .style("text-anchor", "middle")
+    .text("Crops");
+
+
   svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
@@ -400,7 +412,25 @@ function bar(event, d, yearReq) {
     .scaleLinear()
     .domain([0, d3.max(reqDataGraph, (d) => d.value)])
     .range([height, 0]);
-  svg.append("g").call(d3.axisLeft(y));
+  svg.append("g").call(d3.axisLeft(y).ticks(15));
+
+  svg
+  .append("text")
+  .attr("transform", "rotate(-90)")
+  .attr("y", 0 - margin.left)
+  .attr("x", 0 - height / 2)
+  .attr("dy", "1em")
+  .style("text-anchor", "middle")
+  .text("Efficiency (tonne/ha)");
+
+
+  svg
+  .append("text")
+  .attr("x", width / 2)
+  .attr("y", 0 - margin.top / 2)
+  .attr("text-anchor", "middle")
+  .style("font-size", "16px")
+  .text(`Production efficiency in ${stateReq} of varoius crops grown there`);
 
   // Bars
   svg
