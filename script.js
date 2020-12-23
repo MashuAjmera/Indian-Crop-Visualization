@@ -241,20 +241,20 @@ function state(event, d, cropReq) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  // // X Gridlines
-  // svg
-  //   .append("g")
-  //   .attr("class", "grid")
-  //   .style("opacity", "0.3")
-  //   .attr("transform", "translate(0," + height + ")")
-  //   .call(d3.axisBottom(xScale).ticks(5).tickSize(-height).tickFormat(""));
+  // X Gridlines
+  svg
+    .append("g")
+    .attr("class", "grid")
+    .style("opacity", "0.3")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(xScale).ticks(5).tickSize(-height).tickFormat(""));
 
-  // // Y Gridlines
-  // svg
-  //   .append("g")
-  //   .attr("class", "grid")
-  //   .style("opacity", "0.3")
-  //   .call(d3.axisLeft(yScale).ticks(5).tickSize(-width).tickFormat(""));
+  // Y Gridlines
+  svg
+    .append("g")
+    .attr("class", "grid")
+    .style("opacity", "0.3")
+    .call(d3.axisLeft(yScale).ticks(5).tickSize(-width).tickFormat(""));
 
   //drawing x axis
   svg
@@ -293,7 +293,9 @@ function state(event, d, cropReq) {
     .attr("y", 0 - margin.top / 2)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
-    .text(`Production efficiency of ${cropReq} in ${stateReq} over the years`);
+    .text(
+      `Production efficiency of ${cropReq} crop in ${stateReq} over the years`
+    );
 
   // Add the line
   svg
@@ -389,8 +391,7 @@ function bar(event, d, yearReq) {
     )
     .padding(0.2);
 
-
-    svg
+  svg
     .append("text")
     .attr(
       "transform",
@@ -398,7 +399,6 @@ function bar(event, d, yearReq) {
     )
     .style("text-anchor", "middle")
     .text("Crops");
-
 
   svg
     .append("g")
@@ -416,38 +416,73 @@ function bar(event, d, yearReq) {
   svg.append("g").call(d3.axisLeft(y).ticks(15));
 
   svg
-  .append("text")
-  .attr("transform", "rotate(-90)")
-  .attr("y", 0 - margin.left)
-  .attr("x", 0 - height / 2)
-  .attr("dy", "1em")
-  .style("text-anchor", "middle")
-  .text("Efficiency (tonne/ha)");
-
+    .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x", 0 - height / 2)
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Efficiency (tonne/ha)");
 
   svg
-  .append("text")
-  .attr("x", width / 2)
-  .attr("y", 0 - margin.top / 2)
-  .attr("text-anchor", "middle")
-  .style("font-size", "16px")
-  .text(`Production efficiency in ${stateReq} of varoius crops grown there`);
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", 0 - margin.top / 2)
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .text(
+      `Production efficiency of various crops grown in ${stateReq} in ${yearReq}`
+    );
+
+  // Bars
+  // svg
+  //   .selectAll("rect")
+  //   .data(reqDataGraph)
+  //   .enter()
+  //   .append("rect")
+  //   .attr("x", function (d) {
+  //     return x(d.crop);
+  //   })
+  //   .attr("y", function (d) {
+  //     return y(d.value);
+  //   })
+  //   .attr("width", x.bandwidth())
+  //   .attr("height", function (d) {
+  //     return height - y(d.value);
+  //   })
+  //   .attr("fill", "#69b3a2");
 
   // Bars
   svg
-    .selectAll("rect")
+    .selectAll("mybar")
     .data(reqDataGraph)
     .enter()
     .append("rect")
     .attr("x", function (d) {
       return x(d.crop);
     })
+    .attr("width", x.bandwidth())
+    .attr("fill", "#69b3a2")
+    // no bar at the beginning thus:
+    .attr("height", function (d) {
+      return height - y(0);
+    }) // always equal to 0
+    .attr("y", function (d) {
+      return y(0);
+    });
+
+  // Animation
+  svg
+    .selectAll("rect")
+    .transition()
+    .duration(800)
     .attr("y", function (d) {
       return y(d.value);
     })
-    .attr("width", x.bandwidth())
     .attr("height", function (d) {
       return height - y(d.value);
     })
-    .attr("fill", "#69b3a2");
+    .delay(function (d, i) {
+      return i * 100;
+    });
 }
