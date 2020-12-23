@@ -107,6 +107,8 @@ function change() {
   // removing the already created svgs before redrawing the new one
   d3.select("#statespace").select("svg").remove();
   d3.select("#barspace").select("svg").remove();
+  drawSpace.select("g").remove();
+  drawSpace.selectAll("path").remove();
 
   // Adding the legend
   drawSpace
@@ -321,7 +323,7 @@ function bar(event, d, yearReq) {
   let crops = [...new Set(cropInfo.map((d) => d.Crop))].sort();
   let stateReq = d.properties.st_nm;
 
-  //Selecting the data for the selected state and crop
+  //Selecting the data for the selected state and year
   let cropInfoDistGraph = {};
   cropInfoDistGraph = cropInfo
     .map((d) => {
@@ -329,7 +331,7 @@ function bar(event, d, yearReq) {
     })
     .filter((d) => d);
 
-  //Extracting the prodction values by summing over all the production values for each year
+  //Extracting the prodction values by summing over all the production values for each crop
   let prodDataGraph = {};
   for (let c of cropInfoDistGraph) {
     let crop = c.Crop;
@@ -340,7 +342,7 @@ function bar(event, d, yearReq) {
     }
   }
 
-  //Extracting the area values by summing over all the areas for each year
+  //Extracting the area values by summing over all the areas for each crop
   let areaDataGraph = {};
   for (let c of cropInfoDistGraph) {
     let crop = c.Crop;
@@ -350,7 +352,7 @@ function bar(event, d, yearReq) {
     }
   }
 
-  //Making a list of the efficiecny= production/area yearwise
+  //Making a list of the efficiecny= production/area cropwise
   let reqDataGraph = [];
   for (let crop of crops) {
     if (crop in prodDataGraph && crop in areaDataGraph) {
@@ -361,7 +363,7 @@ function bar(event, d, yearReq) {
     }
   }
 
-  console.log(reqDataGraph);
+  reqDataGraph.sort((b, a) => a.value - b.value);
 
   // set the dimensions and margins of the graph
   var margin = { top: 40, right: 30, bottom: 150, left: 70 },
@@ -381,14 +383,10 @@ function bar(event, d, yearReq) {
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   // X axis
-  var x = d3
+  var xScale = d3
     .scaleBand()
     .range([0, width])
-    .domain(
-      reqDataGraph.map(function (d) {
-        return d.crop;
-      })
-    )
+    .domain(reqDataGraph.map((d) => d.crop))
     .padding(0.2);
 
   svg
@@ -403,17 +401,17 @@ function bar(event, d, yearReq) {
   svg
     .append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
+    .call(d3.axisBottom(xScale))
     .selectAll("text")
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
 
   // Add Y axis
-  var y = d3
+  var yScale = d3
     .scaleLinear()
     .domain([0, d3.max(reqDataGraph, (d) => d.value)])
     .range([height, 0]);
-  svg.append("g").call(d3.axisLeft(y).ticks(15));
+  svg.append("g").call(d3.axisLeft(yScale).ticks(15));
 
   svg
     .append("text")
@@ -440,18 +438,12 @@ function bar(event, d, yearReq) {
     .data(reqDataGraph)
     .enter()
     .append("rect")
-    .attr("x", function (d) {
-      return x(d.crop);
-    })
-    .attr("width", x.bandwidth())
+    .attr("x", (d) => xScale(d.crop))
+    .attr("width", xScale.bandwidth())
     .attr("fill", "#69b3a2")
     // no bar at the beginning thus:
-    .attr("height", function (d) {
-      return height - y(0);
-    }) // always equal to 0
-    .attr("y", function (d) {
-      return y(0);
-    })
+    .attr("height", height - yScale(0)) // always equal to 0
+    .attr("y", yScale(0))
     .append("title") // shows a title tooltip to display region's information on hover
     .text((d) => `Efficiency: ${d.value.toFixed(2)} t/ha`);
 
@@ -460,13 +452,7 @@ function bar(event, d, yearReq) {
     .selectAll("rect")
     .transition()
     .duration(800)
-    .attr("y", function (d) {
-      return y(d.value);
-    })
-    .attr("height", function (d) {
-      return height - y(d.value);
-    })
-    .delay(function (d, i) {
-      return i * 100;
-    });
+    .attr("y", (d) => yScale(d.value))
+    .attr("height", (d) => height - yScale(d.value))
+    .delay((d, i) => i * 100);
 }
