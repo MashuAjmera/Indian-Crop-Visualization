@@ -435,24 +435,6 @@ function bar(event, d, yearReq) {
     );
 
   // Bars
-  // svg
-  //   .selectAll("rect")
-  //   .data(reqDataGraph)
-  //   .enter()
-  //   .append("rect")
-  //   .attr("x", function (d) {
-  //     return x(d.crop);
-  //   })
-  //   .attr("y", function (d) {
-  //     return y(d.value);
-  //   })
-  //   .attr("width", x.bandwidth())
-  //   .attr("height", function (d) {
-  //     return height - y(d.value);
-  //   })
-  //   .attr("fill", "#69b3a2");
-
-  // Bars
   svg
     .selectAll("mybar")
     .data(reqDataGraph)
@@ -469,7 +451,9 @@ function bar(event, d, yearReq) {
     }) // always equal to 0
     .attr("y", function (d) {
       return y(0);
-    });
+    })
+    .append("title") // shows a title tooltip to display region's information on hover
+    .text((d) => `Efficiency: ${d.value.toFixed(2)} t/ha`);
 
   // Animation
   svg
