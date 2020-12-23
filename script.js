@@ -32,6 +32,9 @@ function showData(datasources) {
 
   // Calling the change function which calculates the values and draws the svg
   change();
+
+  // stopping the loader after svg has been created
+  document.getElementById("loading-container").style.display = "none";
 }
 
 function change() {
@@ -150,14 +153,6 @@ function change() {
           d.properties.prodPerArea ? d.properties.prodPerArea.toFixed(2) : 0
         } t/ha`
     );
-
-  // stopping the loader after svg has been created
-  document.getElementById("loading-container").style.display = "none";
-
-  // displaying information for user aid
-  document.getElementById(
-    "guideText"
-  ).innerHTML = `Click on a region to see the trend of ${cropReq} crop there over the years.`;
 }
 
 //For Creating the line chart
