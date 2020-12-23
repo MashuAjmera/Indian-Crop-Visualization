@@ -7,53 +7,54 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="header">
+    <header>
       <h1>Efficiency of Crop Production in India</h1>
-    </div>
 
-    <div class="problem_statement">
-    
-      <p id="problemstatement">
-        Visualize and analyse a region wise, crop wise and year wise data on crop covered area (Hectare) and production (Tonnes) to show the efficiency of production of various crops in different regions of India over the years. 
+      <p class="problem_statement">
+        Visualize and analyse a region wise, crop wise and year wise data on
+        crop covered area (Hectare) and production (Tonnes) to show the
+        efficiency of production of various crops in different regions of India
+        over the years.
       </p>
-    </div>
-
-    <div class="visualization">
-      <div id="loading-container">
-        <div class="shapes-container">
-          <div class="circle left-circle"></div>
-          <div class="circle middle-circle"></div>
-          <div class="circle right-circle"></div>
-        </div>
-        <p id="loader">Please Wait Loading...</p>
-      </div>
-
-      <div>
-        <svg id="drawspace" height="700" width="700"></svg>
-      </div>
-
-      <div class="tools">
-        <div class="box">
-          <label for="year">Select Year:</label>
-          <select id="year" name="year" onchange="change()"></select>
+    </header>
+    <main>
+      <div class="visualization">
+        <div id="loading-container">
+          <div class="shapes-container">
+            <div class="circle left-circle"></div>
+            <div class="circle middle-circle"></div>
+            <div class="circle right-circle"></div>
+          </div>
+          <p id="loader">Please Wait Loading...</p>
         </div>
 
-        <div class="box">
-          <label for="crop">Select Crop:</label>
-          <select id="crop" name="crop" onchange="change()"></select>
+        <div>
+          <svg id="drawspace" height="700" width="700"></svg>
         </div>
 
-        <p>
-          Click on a region to see the trend of the selected crop there over the
-          years <i>below</i>.
-        </p>
-        <p>*white means data not available.</p>
+        <div class="tools">
+          <div class="box">
+            <label for="year">Select Year:</label>
+            <select id="year" name="year" onchange="change()"></select>
+          </div>
+
+          <div class="box">
+            <label for="crop">Select Crop:</label>
+            <select id="crop" name="crop" onchange="change()"></select>
+          </div>
+
+          <p>
+            Click on a region to see the trend of the selected crop there over
+            the years <i>below</i>.
+          </p>
+          <p>*white means data not available.</p>
+        </div>
       </div>
-    </div>
-
-    <div id="statespace"></div>
-
-    <div></div>
+      <div class="additional">
+        <div id="statespace"></div>
+        <div id="barspace"></div>
+      </div>
+    </main>
     <footer class="footer">
       <div>
         <h6>Submitted to:</h6>
@@ -61,7 +62,7 @@
         <ul class="details">
           <li>Dr. Subrat Dash</li>
           <li>Associate Professor</li>
-          <li>CSE Dept., LNMIIT</li>
+          <li>CSE Department, LNMIIT</li>
         </ul>
       </div>
 
