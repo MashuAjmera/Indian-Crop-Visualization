@@ -44,19 +44,14 @@ body {
   font-family: "Trebuchet MS";
   line-height: 25px;
   color: #737373;
-  display: flex;
-  justify-content: space-evenly;
-}
-/* styling details in footer*/
-.details {
-  padding-left: 0;
-  list-style: none;
+  text-align: center;
 }
 /* styling header used in footer */
 .footer h6 {
   font-size: 14px;
   text-transform: uppercase;
   margin-top: 2px;
+  margin-bottom: 0px;
 }
 
 /* styling dropdown div */
