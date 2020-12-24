@@ -1,15 +1,86 @@
-// Selecting the svg element
-let drawSpace = d3.select("#drawspace");
-
 // Reading the dataset and the geoJSON file for India
 Promise.all([d3.csv("crop.csv"), d3.json("states.json")]).then(showData);
 
-var mapInfo, reqData, drawSpaceW, drawSpaceH, cropInfo;
+var mapInfo,
+  reqData,
+  drawSpaceW = 700,
+  drawSpaceH = 700,
+  cropInfo;
+
+function makeGeoPath(mapInfo) {
+  let myProjection = d3.geoMercator().scale(1).translate([0, 0]);
+  let geoPath = d3.geoPath().projection(myProjection);
+  var b = geoPath.bounds(mapInfo),
+    s =
+      0.95 /
+      Math.max(
+        (b[1][0] - b[0][0]) / drawSpaceW,
+        (b[1][1] - b[0][1]) / drawSpaceH
+      ),
+    t = [
+      (drawSpaceW - s * (b[1][0] + b[0][0])) / 2,
+      (drawSpaceH - s * (b[1][1] + b[0][1])) / 2,
+    ];
+  myProjection.scale(s).translate(t);
+  return geoPath;
+}
+
+function drawLegend(maxprodPerArea) {
+  let color = d3.scaleQuantize([0, maxprodPerArea], d3.schemeGreens[6]);
+
+  let lgnd = d3.select("#legend");
+  lgnd.select("svg").remove();
+  lgnd
+    .append("svg")
+    .attr("height", "50px")
+    .append("g")
+    .attr("transform", "translate(0,0)")
+    .append(() =>
+      legend({
+        color,
+        title: "Efficiency (t/ha)",
+        width: 260,
+        tickFormat: ".2f",
+      })
+    );
+}
+
+function calculate(distribution, property) {
+  //Extracting the prodction and area values by summing over all the values
+  let prodData = {},
+    areaData = {};
+
+  for (let c of distribution) {
+    let prop =
+      property == "state"
+        ? c.State_Name
+        : property == "crop"
+        ? c.Crop
+        : property == "year"
+        ? c.Crop_Year
+        : property == "district"
+        ? c.District_Name
+        : undefined;
+
+    if (parseFloat() !== NaN || c.Production !== "") {
+      prodData[prop] =
+        prop in prodData
+          ? prodData[prop] + parseFloat(c.Production)
+          : parseFloat(c.Production);
+    }
+
+    if (parseFloat(c.Area) !== NaN || c.Area !== "") {
+      areaData[prop] =
+        prop in areaData
+          ? areaData[prop] + parseFloat(c.Area)
+          : parseFloat(c.Area);
+    }
+  }
+
+  return [prodData, areaData];
+}
 
 function showData(datasources) {
-  drawSpaceH = 700;
-  drawSpaceW = 700;
-
   // Saving the array read file into variavles
   cropInfo = datasources[0];
   mapInfo = datasources[1];
@@ -38,55 +109,26 @@ function showData(datasources) {
 }
 
 function change() {
+  console.log("func called");
   //Making a list of states in the data
-  let states = [...new Set(cropInfo.map((d) => d.State_Name))];
-
   let yearReq = document.getElementById("year").value; // Taking the input of the crop from user
   let cropReq = document.getElementById("crop").value; // Taking the input of the year from user
 
   //Taking the required data from the main data
   let cropInfoDist = {};
-  cropInfoDist = cropInfo
-    .map((d) => {
-      if (yearReq == d.Crop_Year && cropReq == d.Crop) return d;
-    })
-    .filter((d) => d);
+  cropInfoDist = cropInfo.filter(
+    (d) => yearReq == d.Crop_Year && cropReq == d.Crop
+  );
 
-  //Extracting the production values
-  let prodData = {};
-  for (let c of cropInfoDist) {
-    let state = c.State_Name;
-    if (parseFloat(c.Production) !== NaN || c.Production !== "") {
-      if (state in prodData) prodData[state] += parseFloat(c.Production);
-      else prodData[state] = parseFloat(c.Production);
-    }
-  }
-
-  //Extracting the area used for production
-  let areaData = {};
-  for (let c of cropInfoDist) {
-    let state = c.State_Name;
-    if (parseFloat(c.Area) !== NaN || c.Area !== "") {
-      if (state in areaData) areaData[state] += parseFloat(c.Area);
-      else areaData[state] = parseFloat(c.Area);
-    }
-  }
-
-  //Making a list of the (production/area) statewise
-  reqData = {};
-  for (let state of states) {
-    if (state in prodData && state in areaData) {
-      reqData[state] = prodData[state] / areaData[state];
-    } else {
-      reqData[state] = 0;
-    }
-  }
+  let [prodData, areaData] = calculate(cropInfoDist, "state");
 
   //Merging the data that is to be display with the map data
   mapInfo.features = mapInfo.features.map((d) => {
     let state = d.properties.st_nm;
-    let prodPerArea = reqData[state];
-    d.properties.prodPerArea = prodPerArea;
+    d.properties.prodPerArea =
+      state in prodData && state in areaData
+        ? prodData[state] / areaData[state]
+        : 0;
     return d;
   });
 
@@ -102,30 +144,18 @@ function change() {
     .domain([0, maxProdPerArea])
     .range(["white", "green"]);
 
-  let color = d3.scaleQuantize([0, maxProdPerArea], d3.schemeGreens[6]);
+  drawLegend(maxProdPerArea);
 
   // removing the already created svgs before redrawing the new one
   d3.select("#statespace").select("svg").remove();
   d3.select("#barspace").select("svg").remove();
-  drawSpace.select("g").remove();
+
+  // Selecting the svg element
+  let drawSpace = d3.select("#drawspace");
   drawSpace.selectAll("path").remove();
 
-  // Adding the legend
-  drawSpace
-    .append("g")
-    .attr("transform", "translate(" + drawSpaceW / 2 + ",0)")
-    .append(() =>
-      legend({
-        color,
-        title: "Efficiency (t/ha)",
-        width: 260,
-        tickFormat: ".2f",
-      })
-    );
-
   //  Using geoMercator for our map projection
-  let myProjection = d3.geoMercator().scale(1150).translate([-1300, 820]);
-  let geoPath = d3.geoPath().projection(myProjection);
+  let geoPath = makeGeoPath(mapInfo);
 
   //Creating the map and functionality to it.
   drawSpace
@@ -145,6 +175,7 @@ function change() {
       this.style.opacity = 1;
     })
     .on("click", (event, d) => {
+      map(event, d, cropReq, yearReq);
       state(event, d, cropReq);
       bar(event, d, yearReq);
     }) //Creates a line chart of the state for the selected crop over the years
@@ -157,6 +188,9 @@ function change() {
           d.properties.prodPerArea ? d.properties.prodPerArea.toFixed(2) : 0
         } t/ha`
     );
+
+  document.getElementById("info").innerHTML =
+    "Click on a region to see its details.";
 }
 
 //For Creating the line chart
@@ -167,32 +201,11 @@ function state(event, d, cropReq) {
 
   //Selecting the data for the selected state and crop
   let cropInfoDistGraph = {};
-  cropInfoDistGraph = cropInfo
-    .map((d) => {
-      if (stateReq == d.State_Name && cropReq == d.Crop) return d;
-    })
-    .filter((d) => d);
+  cropInfoDistGraph = cropInfo.filter(
+    (d) => stateReq == d.State_Name && cropReq == d.Crop
+  );
 
-  //Extracting the prodction values by summing over all the production values for each year
-  let prodDataGraph = {};
-  for (let c of cropInfoDistGraph) {
-    let year = c.Crop_Year;
-    if (parseFloat(c.Production) !== NaN || c.Production !== "") {
-      if (year in prodDataGraph)
-        prodDataGraph[year] += parseFloat(c.Production);
-      else prodDataGraph[year] = parseFloat(c.Production);
-    }
-  }
-
-  //Extracting the area values by summing over all the areas for each year
-  let areaDataGraph = {};
-  for (let c of cropInfoDistGraph) {
-    let year = c.Crop_Year;
-    if (parseFloat(c.Area) !== NaN || c.Area !== "") {
-      if (year in areaDataGraph) areaDataGraph[year] += parseFloat(c.Area);
-      else areaDataGraph[year] = parseFloat(c.Area);
-    }
-  }
+  let [prodDataGraph, areaDataGraph] = calculate(cropInfoDistGraph, "year");
 
   //Making a list of the efficiecny= production/area yearwise
   let reqDataGraph = [];
@@ -216,9 +229,7 @@ function state(event, d, cropReq) {
 
   // Formatting the Data
   var parseDate = d3.timeParse("%Y");
-  reqDataGraph.forEach(function (d) {
-    d.date = parseDate(d.date);
-  });
+  reqDataGraph.forEach((d) => (d.date = parseDate(d.date)));
 
   // x axis scale
   var xScale = d3
@@ -323,32 +334,11 @@ function bar(event, d, yearReq) {
 
   //Selecting the data for the selected state and year
   let cropInfoDistGraph = {};
-  cropInfoDistGraph = cropInfo
-    .map((d) => {
-      if (stateReq == d.State_Name && yearReq == d.Crop_Year) return d;
-    })
-    .filter((d) => d);
+  cropInfoDistGraph = cropInfo.filter(
+    (d) => stateReq == d.State_Name && yearReq == d.Crop_Year
+  );
 
-  //Extracting the prodction values by summing over all the production values for each crop
-  let prodDataGraph = {};
-  for (let c of cropInfoDistGraph) {
-    let crop = c.Crop;
-    if (parseFloat(c.Production) !== NaN || c.Production !== "") {
-      if (crop in prodDataGraph)
-        prodDataGraph[crop] += parseFloat(c.Production);
-      else prodDataGraph[crop] = parseFloat(c.Production);
-    }
-  }
-
-  //Extracting the area values by summing over all the areas for each crop
-  let areaDataGraph = {};
-  for (let c of cropInfoDistGraph) {
-    let crop = c.Crop;
-    if (parseFloat(c.Area) !== NaN || c.Area !== "") {
-      if (crop in areaDataGraph) areaDataGraph[crop] += parseFloat(c.Area);
-      else areaDataGraph[crop] = parseFloat(c.Area);
-    }
-  }
+  let [prodDataGraph, areaDataGraph] = calculate(cropInfoDistGraph, "crop");
 
   //Making a list of the efficiecny= production/area cropwise
   let reqDataGraph = [];
@@ -360,8 +350,7 @@ function bar(event, d, yearReq) {
       });
     }
   }
-
-  reqDataGraph.sort((b, a) => a.value - b.value);
+  reqDataGraph.sort((b, a) => a.value - b.value); // sort descending
 
   // set the dimensions and margins of the graph
   var margin = { top: 40, right: 30, bottom: 150, left: 70 },
@@ -453,4 +442,82 @@ function bar(event, d, yearReq) {
     .attr("y", (d) => yScale(d.value))
     .attr("height", (d) => height - yScale(d.value))
     .delay((d, i) => i * 100);
+}
+
+function map(event, d, cropReq, yearReq) {
+  var stateReq = d.properties.st_nm; // Taking the input of the state from user
+
+  d3.json(`maps/${stateReq}.json`).then((datasources) => {
+    var mapInfo = topojson.feature(datasources, datasources.objects.districts);
+
+    let cropInfoDist = [];
+    cropInfoDist = cropInfo
+      .filter(
+        (d) =>
+          yearReq == d.Crop_Year &&
+          cropReq == d.Crop &&
+          stateReq == d.State_Name
+      )
+      .map((d) => {
+        d.District_Name = d.District_Name.toLowerCase()
+          .split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+        return d;
+      });
+
+    let [prodData, areaData] = calculate(cropInfoDist, "district");
+
+    mapInfo.features = mapInfo.features.map((d) => {
+      let district = d.properties.district;
+      d.properties.prodPerArea =
+        district in prodData && district in areaData
+          ? prodData[district] / areaData[district]
+          : 0;
+      return d;
+    });
+
+    let maxprodPerArea = d3.max(
+      mapInfo.features,
+      (d) => d.properties.prodPerArea
+    );
+    let cScale = d3
+      .scaleLinear()
+      .domain([0, maxprodPerArea])
+      .range(["white", "green"]);
+
+    // Adding the legend
+    drawLegend(maxprodPerArea);
+
+    let geoPath = makeGeoPath(mapInfo);
+
+    let drawSpace = d3.select("#drawspace");
+    drawSpace.selectAll("path").remove();
+
+    drawSpace
+      .selectAll("path")
+      .data(mapInfo.features)
+      .enter()
+      .append("path")
+      .attr("d", (d) => geoPath(d))
+      .attr("stroke", "black")
+      .attr("fill", (d) =>
+        d.properties.prodPerArea ? cScale(d.properties.prodPerArea) : "white"
+      ) // for divergent scale
+      .append("title") // shows a title tooltip to display region's information on hover
+      .text(
+        (d) =>
+          `${d.properties.district}\nProduction: ${
+            prodData[d.properties.district]
+          } tonnes\nArea: ${
+            areaData[d.properties.district]
+          } hectres\nEfficiency: ${
+            d.properties.prodPerArea ? d.properties.prodPerArea.toFixed(2) : 0
+          } t/ha`
+      );
+  });
+
+  let obj = document.getElementById("info");
+  obj.innerHTML = "Click here or make another selection to go back.";
+  obj.addEventListener("click", change);
 }

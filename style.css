@@ -9,16 +9,14 @@ header {
 }
 /* styling visualization area */
 .visualization {
-  margin: auto;
-  width: 50%;
   padding: 10px;
   font-family: "Trebuchet MS";
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
 }
 /* styling svg drawspace */
 #drawspace {
-  margin: "10px";
+  margin: "10px auto";
   background-color: white;
 }
 /* styling labels for drpodown */
@@ -89,9 +87,18 @@ body {
   margin-bottom: auto;
 }
 
+.additional {
+  display: flex;
+  flex-direction: row;
+}
+
 /* styling statespace of linechart */
 #statespace {
-  margin: 10px;
+  flex: 1;
+}
+
+#barspace {
+  flex: 4;
 }
 
 /* styling loader div*/
@@ -185,10 +192,6 @@ body {
   100% {
     top: 0;
   }
-}
-
-.additional {
-  display: flex;
 }
 
 main {
